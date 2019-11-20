@@ -8,7 +8,6 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
 
     private int heapSize;
     private long nextTimeStamp = 0L;
-    private long offset =0;
 
 
     public HeapQueue() {
@@ -29,7 +28,7 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
 
         @Override
         public int compareTo(TSPair<V, P> o) {
-            return (int)( this.timeStamp - o.timeStamp);
+            return (int) (o.timeStamp - this.timeStamp);
         }
 
         @Override
@@ -62,26 +61,75 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         pairs.set(i,auxN);
     }
 
+
+
+    @Override
+    public V remove() {
+        V value = pairs.get(0).value;
+        pairs.set(0, pairs.get(heapSize - 1));
+        pairs.remove(heapSize - 1);
+        heapSize--;
+        rebuildMaxHeap(pairs);
+        return value;
+    }
+
+    private void rebuildMaxHeap(ArrayList<TSPair<V, P>> pairs) {
+        int index = 0;
+        while (hasLeft(index)) {
+            int smallNode = left(index);
+
+            if (hasRight(index) && comparador2(pairs.get(right(index)), pairs.get(left(index))) > 0) {
+                smallNode = right(index);
+
+            }
+            if (comparador2(pairs.get(index), pairs.get(smallNode)) > 0) {
+                break;
+            } else {
+                swap(index, smallNode);
+
+            }
+            index = smallNode;
+
+        }
+    }
+
+    private void swap(int i, int j) {
+        TSPair<V, P> Aux = pairs.get(i);
+        pairs.set(i, pairs.get(j));
+        pairs.set(j, Aux);
+    }
+
     private int comparadoreishon(P auxP, ArrayList<TSPair<V, P>> pairs, int i, TSPair<V, P> auxN) {
         //System.out.println("prioritat REF "+auxP);
         //System.out.println("prioritat Nxt "+pairs.get(parent(i)).priority);
         //System.out.println("---------------------->"+auxP.compareTo(pairs.get(parent(i)).priority));
-        if(auxP.compareTo(pairs.get(parent(i)).priority)==0){
+        if (auxP.compareTo(pairs.get(parent(i)).priority) == 0) {
+
             return auxN.compareTo(pairs.get(parent(i)));
-        }else{
+        } else {
             return auxP.compareTo(pairs.get(parent(i)).priority);
         }
 
     }
 
-    @Override
-    public V remove() {
-        return null;
+    private int comparador2(TSPair<V, P> a, TSPair<V, P> b) {
+
+        if (a.priority == b.priority) {
+            return a.compareTo(b); //compara time stamp
+        } else {
+            return a.priority.compareTo(b.priority);//compara prioritat
+        }
+
+        
     }
 
     @Override
     public V element() {
-        return null;
+        return pairs.get(0).value;
+    }
+
+    public String getNode() {
+        return pairs.get(0).toString();
     }
 
     @Override
