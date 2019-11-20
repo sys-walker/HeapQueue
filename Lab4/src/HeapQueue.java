@@ -46,7 +46,7 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
     private int priorityComparator(TSPair<V,P> aux, TSPair<V,P> vptsPair) {
 
         //aux = vptsPair =null--> timestamp
-        //a=null XOR vptsPair=null ----> 1
+        //a=null estrict or  vptsPair=null ----> 1
         //a!=null AND vptsPair!=null---> priority
         if (aux.priority==null && vptsPair.priority==null){
             return aux.compareTo(vptsPair);
@@ -98,9 +98,6 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
 
     @Override
     public void add(V value, P priority) {
-
-
-
         TSPair<V,P> element = new TSPair<>(value,priority,nextTimeStamp);
         pairs.add(element);
         nextTimeStamp ++;
