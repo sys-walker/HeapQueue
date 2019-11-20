@@ -5,16 +5,11 @@ import java.util.*;
 public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQueue<V,P> {
 
     private final ArrayList<TSPair<V,P>> pairs = new ArrayList<>();
-
     private int heapSize;
     private long nextTimeStamp = 0L;
-
-
     public HeapQueue() {
         this.heapSize=0;
     }
-
-
     private static class TSPair<V, P extends Comparable<? super P>> implements Comparable<TSPair<V,P>>  {
         private final V value;
         private  final P priority;
@@ -37,6 +32,70 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         }
     }
 
+    private void makeMaxHeap(ArrayList<TSPair<V,P>> pairs, int i) {
+
+        //P auxP = pairs.get(i).priority;  // P auxP = pairs.get(i).priority;
+        //System.out.println("priority "+auxP);
+        TSPair<V,P> aux = pairs.get(i);
+        while (hasParent(i) && priorityComparator(aux,pairs.get(parent(i)))>0){
+            pairs.set(i,pairs.get(parent(i)));
+            i = parent(i);
+        }
+        pairs.set(i,aux);
+    }
+    private int priorityComparator(TSPair<V,P> aux, TSPair<V,P> vptsPair) {
+
+        //aux = vptsPair =null--> timestamp
+        //a=null XOR vptsPair=null ----> 1
+        //a!=null AND vptsPair!=null---> priority
+        if (aux.priority==null && vptsPair.priority==null){
+            return aux.compareTo(vptsPair);
+        }
+        if (aux.priority!=null && vptsPair.priority!=null){
+            return aux.priority.compareTo(vptsPair.priority);
+        }else{
+            return 1;
+        }
+    }
+
+    private void rebuildMaxHeap(ArrayList<TSPair<V, P>> pairs) {
+        int index = 0;
+        while (hasLeft(index)) {
+            int smallNode = left(index);
+
+
+
+            if (hasRight(index) && priorityComparator(pairs.get(right(index)), pairs.get(left(index))) > 0) {
+                smallNode = right(index);
+
+            }
+            if (priorityComparator(pairs.get(index), pairs.get(smallNode)) < 0) {
+                break;
+            } else {
+                swap(index, smallNode);
+
+            }
+            index = smallNode;
+
+        }
+    }
+    private void swap(int i, int j) {
+        TSPair<V, P> Aux = pairs.get(i);
+        pairs.set(i, pairs.get(j));
+        pairs.set(j, Aux);
+    }
+
+
+
+    public static int parent(int index){return index/2;}
+    public static int left(int index){return 2*index+1;}
+    public static int right(int index){return 2*index+2;}
+    public boolean isValid(int index){return 0<= index && index < size();}
+    public boolean hasParent(int index){return index > 0;}
+    public boolean hasLeft(int index){return isValid(left(index));}
+    public boolean hasRight(int index){return isValid(right(index));}
+
+
     @Override
     public void add(V value, P priority) {
 
@@ -49,20 +108,6 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         makeMaxHeap(pairs,heapSize-1);
 
     }
-
-    private void makeMaxHeap(ArrayList<TSPair<V,P>> pairs, int i) {
-
-        P auxP = pairs.get(i).priority;
-        TSPair<V,P> auxN = pairs.get(i);
-        while (hasParent(i) && comparadoreishon(auxP,pairs,i,auxN)>0){
-            pairs.set(i,pairs.get(parent(i)));
-            i = parent(i);
-        }
-        pairs.set(i,auxN);
-    }
-
-
-
     @Override
     public V remove() {
         V value = pairs.get(0).value;
@@ -72,81 +117,15 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         rebuildMaxHeap(pairs);
         return value;
     }
-
-    private void rebuildMaxHeap(ArrayList<TSPair<V, P>> pairs) {
-        int index = 0;
-        while (hasLeft(index)) {
-            int smallNode = left(index);
-
-            if (hasRight(index) && comparador2(pairs.get(right(index)), pairs.get(left(index))) > 0) {
-                smallNode = right(index);
-
-            }
-            if (comparador2(pairs.get(index), pairs.get(smallNode)) > 0) {
-                break;
-            } else {
-                swap(index, smallNode);
-
-            }
-            index = smallNode;
-
-        }
-    }
-
-    private void swap(int i, int j) {
-        TSPair<V, P> Aux = pairs.get(i);
-        pairs.set(i, pairs.get(j));
-        pairs.set(j, Aux);
-    }
-
-    private int comparadoreishon(P auxP, ArrayList<TSPair<V, P>> pairs, int i, TSPair<V, P> auxN) {
-        //System.out.println("prioritat REF "+auxP);
-        //System.out.println("prioritat Nxt "+pairs.get(parent(i)).priority);
-        //System.out.println("---------------------->"+auxP.compareTo(pairs.get(parent(i)).priority));
-        if (auxP.compareTo(pairs.get(parent(i)).priority) == 0) {
-
-            return auxN.compareTo(pairs.get(parent(i)));
-        } else {
-            return auxP.compareTo(pairs.get(parent(i)).priority);
-        }
-
-    }
-
-    private int comparador2(TSPair<V, P> a, TSPair<V, P> b) {
-
-        if (a.priority == b.priority) {
-            return a.compareTo(b); //compara time stamp
-        } else {
-            return a.priority.compareTo(b.priority);//compara prioritat
-        }
-
-        
-    }
-
     @Override
     public V element() {
         return pairs.get(0).value;
     }
-
-    public String getNode() {
-        return pairs.get(0).toString();
-    }
-
     @Override
     public int size() {
         return heapSize;
     }
 
-
-
-    public static int parent(int index){return index/2;}
-    public static int left(int index){return 2*index+1;}
-    public static int right(int index){return 2*index+2;}
-
-    public boolean isValid(int index){return 0<= index && index < size();}
-    public boolean hasParent(int index){return index > 0;}
-    public boolean hasLeft(int index){return isValid(left(index));}
-    public boolean hasRight(int index){return isValid(right(index));}
 
     @Override
     public String toString() {
@@ -158,5 +137,9 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
 
         }
         return s.toString();
+    }
+//for debug
+    public String getNode() {
+        return pairs.get(0).toString();
     }
 }
