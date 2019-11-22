@@ -1,5 +1,3 @@
-
-import java.time.Instant;
 import java.util.*;
 
 public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQueue<V,P> {
