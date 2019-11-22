@@ -54,9 +54,9 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         }
 
         //hi ha alguna propietat nula
-        if (aux.priority != null && vptsPair.priority ==null){
+        if (aux.priority != null){
             return 1;
-        }else if(aux.priority == null && vptsPair.priority !=null){
+        }else if(vptsPair.priority !=null){
             return -1;
         }
         return aux.compareTo(vptsPair);
