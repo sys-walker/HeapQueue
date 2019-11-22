@@ -2,7 +2,6 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        System.out.println("ES CONSIDERA QUE LES PRIORITATAS NO ES REPETEIXEN ");
         HeapQueue<String, Integer> q = new HeapQueue<>(); // 5-2-9-8-6-7*
         q.add("a", 6);
         System.out.println(q.toString());
