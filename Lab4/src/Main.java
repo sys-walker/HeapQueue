@@ -7,7 +7,7 @@ public class Main {
         System.out.println(q.toString());
         q.add("b", 2);
         System.out.println(q.toString());
-        q.add("c", 9);
+        q.add("c", null);
         System.out.println(q.toString());
         q.add("d", 8);
         System.out.println(q.toString());

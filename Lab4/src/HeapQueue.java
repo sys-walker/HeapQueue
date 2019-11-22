@@ -45,18 +45,25 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
     }
     private int priorityComparator(TSPair<V,P> aux, TSPair<V,P> vptsPair) {
 
-        //aux = vptsPair =null--> timestamp
-        //a=null estrict or  vptsPair=null ----> 1
-        //a!=null AND vptsPair!=null---> priority
-        if (aux.priority==null && vptsPair.priority==null){
-            return aux.compareTo(vptsPair);
+        if (aux.priority != null && vptsPair.priority!=null) { // Les 2 prioritats NO son nules
+            if (aux.priority.compareTo(vptsPair.priority)==0){ //Prioritats iguales (comparo el time)
+                return aux.compareTo(vptsPair);
+            }else{ //les prioritats son diferents
+                return aux.priority.compareTo(vptsPair.priority);
+            }
         }
-        if (aux.priority!=null && vptsPair.priority!=null){
-            return aux.priority.compareTo(vptsPair.priority);
-        }else{
+
+        //hi ha alguna propietat nula
+        if (aux.priority != null && vptsPair.priority ==null){
             return 1;
+        }else if(aux.priority == null && vptsPair.priority !=null){
+            return -1;
         }
+        return aux.compareTo(vptsPair);
     }
+
+
+
 
     private void rebuildMaxHeap(ArrayList<TSPair<V, P>> pairs) {
         int index = 0;
@@ -69,7 +76,7 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
                 smallNode = right(index);
 
             }
-            if (priorityComparator(pairs.get(index), pairs.get(smallNode)) < 0) {
+            if (priorityComparator(pairs.get(index), pairs.get(smallNode)) > 0) {
                 break;
             } else {
                 swap(index, smallNode);
