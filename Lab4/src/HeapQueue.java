@@ -45,8 +45,6 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
 
         if (aux.priority != null && vptsPair.priority!=null) { // Les 2 prioritats NO son nules
 
-
-
             return (aux.priority.compareTo(vptsPair.priority)==0) ? aux.compareTo(vptsPair) : aux.priority.compareTo(vptsPair.priority);
             /*if (aux.priority.compareTo(vptsPair.priority)==0){ //Prioritats iguales (comparo el time)
                 return aux.compareTo(vptsPair);
