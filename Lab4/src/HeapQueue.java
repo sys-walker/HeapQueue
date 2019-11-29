@@ -121,7 +121,8 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
     }
     @Override
     public V element() {
-        return pairs.get(0).value;
+        if (size() != 0) return pairs.get(0).value;
+        throw new NoSuchElementException();
     }
     @Override
     public int size() {
