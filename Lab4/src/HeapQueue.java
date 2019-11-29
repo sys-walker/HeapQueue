@@ -44,11 +44,15 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
     private int priorityComparator(TSPair<V,P> aux, TSPair<V,P> vptsPair) {
 
         if (aux.priority != null && vptsPair.priority!=null) { // Les 2 prioritats NO son nules
-            if (aux.priority.compareTo(vptsPair.priority)==0){ //Prioritats iguales (comparo el time)
+
+
+
+            return (aux.priority.compareTo(vptsPair.priority)==0) ? aux.compareTo(vptsPair) : aux.priority.compareTo(vptsPair.priority);
+            /*if (aux.priority.compareTo(vptsPair.priority)==0){ //Prioritats iguales (comparo el time)
                 return aux.compareTo(vptsPair);
             }else{ //les prioritats son diferents
                 return aux.priority.compareTo(vptsPair.priority);
-            }
+            }*/
         }
 
         //hi ha alguna propietat nula
@@ -57,7 +61,7 @@ public class HeapQueue<V,P extends Comparable<? super P>> implements PriorityQue
         }else if(vptsPair.priority !=null){
             return -1;
         }
-        return aux.compareTo(vptsPair);
+        return aux.compareTo(vptsPair); //Les 2 propietats son Nules
     }
 
 
